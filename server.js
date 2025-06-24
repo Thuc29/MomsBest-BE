@@ -12,14 +12,17 @@ const productRouter = require("./routers/product");
 const productReviewRouter = require("./routers/review");
 const orderRouter = require("./routers/order");
 const chatbotRouter = require("./routers/chatbot");
+const adminRouter = require("./routers/admin");
+const adminUserController = require("./controller/admin/user");
 
 // Connect Database
 connectDB();
+adminUserController.createDefaultAdmin();
 
 // Middleware
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
       "Content-Type",
@@ -42,6 +45,7 @@ app.use("/api/products", productRouter);
 app.use("/api/productReviews", productReviewRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/chatbot", chatbotRouter);
+app.use("/api/admin", adminRouter);
 
 const PORT = process.env.PORT || 9999;
 

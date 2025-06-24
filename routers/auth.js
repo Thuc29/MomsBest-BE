@@ -43,18 +43,17 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    // Nếu là admin, kiểm tra hoặc tạo tài khoản admin mặc định
-    if (email === "admin@gmail.com") {
-      let adminUser = await User.findOne({ email: "admin" });
+    // Đăng nhập admin
+    if (email === "admin@example.com") {
+      const adminUser = await User.findOne({
+        email: "admin@example.com",
+        role: "admin",
+      });
       if (!adminUser) {
-        const hashedPassword = await bcrypt.hash("admin", 10);
-        adminUser = new User({
-          email: "admin",
-          password: hashedPassword,
-          name: "Admin",
-          role: "admin",
+        return res.status(200).json({
+          success: false,
+          message: "Tài khoản admin chưa được khởi tạo.",
         });
-        await adminUser.save();
       }
       const isMatch = await bcrypt.compare(password, adminUser.password);
       if (!isMatch) {
@@ -70,6 +69,7 @@ router.post("/login", async (req, res) => {
       adminUser.last_login = new Date();
       await adminUser.save();
       return res.json({
+        success: true,
         token,
         user: {
           _id: adminUser._id,
