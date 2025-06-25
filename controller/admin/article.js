@@ -1,4 +1,4 @@
-const Article = require("../../model/article");
+const Article = require("../../model/Article");
 
 // Lấy danh sách bài viết (phân trang, tìm kiếm, lọc)
 exports.getArticles = async (req, res) => {
