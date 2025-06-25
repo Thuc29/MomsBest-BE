@@ -22,8 +22,8 @@ adminUserController.createDefaultAdmin();
 // Middleware
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://momsbest-fe.onrender.com/"],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    origin: ["http://localhost:3000", "https://momsbest-fe.onrender.com"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: [
       "Content-Type",
       "Authorization",
