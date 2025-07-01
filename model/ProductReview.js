@@ -6,6 +6,7 @@ const productReviewSchema = new mongoose.Schema({
   order_id: { type: mongoose.Schema.Types.ObjectId, ref: "Order" },
   rating: { type: Number, required: true, min: 1, max: 5 },
   comment: { type: String },
+  image: { type: String },
   is_verified_purchase: { type: Boolean, default: false },
   helpful_count: { type: Number, default: 0 },
   created_at: { type: Date, default: Date.now },

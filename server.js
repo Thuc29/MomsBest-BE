@@ -3,6 +3,7 @@ const connectDB = require("./config/db");
 const { json, urlencoded } = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
+const path = require("path");
 const app = express();
 const authRouter = require("./routers/auth");
 const categoryRouter = require("./routers/category");
@@ -36,6 +37,9 @@ app.use(express.json());
 app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(morgan("dev"));
+
+// Cho phép truy cập ảnh review qua URL
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/auth", authRouter);
 app.use("/api/categories", categoryRouter);
