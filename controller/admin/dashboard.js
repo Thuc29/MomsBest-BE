@@ -3,7 +3,7 @@ const Product = require("../../model/Product");
 const Order = require("../../model/Order");
 const ForumThread = require("../../model/ForumThread");
 const ForumComment = require("../../model/ForumComment");
-const Article = require("../../model/article");
+const Article = require("../../model/Article");
 
 exports.getDashboardStats = async (req, res) => {
   try {
