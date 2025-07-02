@@ -89,3 +89,16 @@ exports.toggleActive = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+// Đổi trạng thái nổi bật
+exports.toggleFeatured = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+    product.is_featured = !product.is_featured;
+    await product.save();
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

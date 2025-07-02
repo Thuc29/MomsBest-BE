@@ -9,6 +9,7 @@ const orderController = require("../controller/admin/order");
 const articleController = require("../controller/admin/article");
 const forumThreadController = require("../controller/admin/forumThread");
 const forumCommentController = require("../controller/admin/forumComment");
+const categoryProductController = require("../controller/admin/categoryProduct");
 
 router.get("/dashboard", isAdmin, dashboardController.getDashboardStats);
 
@@ -31,6 +32,11 @@ router.patch(
   "/products/:id/toggle-active",
   isAdmin,
   productController.toggleActive
+);
+router.patch(
+  "/products/:id/toggle-featured",
+  isAdmin,
+  productController.toggleFeatured
 );
 
 // Quản lý danh mục
@@ -79,6 +85,17 @@ router.delete(
   "/forumcomments/:id",
   isAdmin,
   forumCommentController.deleteComment
+);
+
+// Quản lý category sản phẩm
+router.get("/categoryproducts", isAdmin, categoryProductController.getAll);
+router.get("/categoryproducts/:id", isAdmin, categoryProductController.getById);
+router.post("/categoryproducts", isAdmin, categoryProductController.create);
+router.put("/categoryproducts/:id", isAdmin, categoryProductController.update);
+router.delete(
+  "/categoryproducts/:id",
+  isAdmin,
+  categoryProductController.delete
 );
 
 module.exports = router;

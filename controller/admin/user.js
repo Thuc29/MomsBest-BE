@@ -4,25 +4,39 @@ const bcrypt = require("bcryptjs");
 // Lấy danh sách tài khoản (có phân trang, tìm kiếm, chỉ lấy user thường)
 exports.getUsers = async (req, res) => {
   try {
-    const { page = 1, limit = 20, search = "" } = req.query;
-    const query = search
-      ? {
-          $and: [
-            { role: "user" },
-            {
-              $or: [
-                { name: { $regex: search, $options: "i" } },
-                { email: { $regex: search, $options: "i" } },
-              ],
-            },
-          ],
-        }
-      : { role: "user" };
+    const { page = 1, limit = 20, search = "", role = "user" } = req.query;
+    let query = {};
+    if (role === "all") {
+      query = search
+        ? {
+            $or: [
+              { name: { $regex: search, $options: "i" } },
+              { email: { $regex: search, $options: "i" } },
+            ],
+          }
+        : {};
+    } else {
+      query = search
+        ? {
+            $and: [
+              { role },
+              {
+                $or: [
+                  { name: { $regex: search, $options: "i" } },
+                  { email: { $regex: search, $options: "i" } },
+                ],
+              },
+            ],
+          }
+        : { role };
+    }
     const users = await User.find(query)
       .skip((page - 1) * limit)
       .limit(Number(limit))
       .sort({ created_at: -1 });
     const total = await User.countDocuments(query);
+    console.log("Query:", query);
+    console.log("Users found:", users);
     res.json({ users, total });
   } catch (err) {
     res.status(500).json({ message: err.message });

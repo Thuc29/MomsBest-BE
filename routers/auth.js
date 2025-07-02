@@ -55,6 +55,14 @@ router.post("/login", async (req, res) => {
           message: "Tài khoản admin chưa được khởi tạo.",
         });
       }
+      if (!adminUser.is_active) {
+        return res
+          .status(403)
+          .json({
+            success: false,
+            message: "Tài khoản của bạn đã bị vô hiệu hóa",
+          });
+      }
       const isMatch = await bcrypt.compare(password, adminUser.password);
       if (!isMatch) {
         return res
@@ -87,6 +95,14 @@ router.post("/login", async (req, res) => {
       return res
         .status(200)
         .json({ success: false, message: "Email hoặc mật khẩu không đúng." });
+    }
+    if (!user.is_active) {
+      return res
+        .status(403)
+        .json({
+          success: false,
+          message: "Tài khoản của bạn đã bị vô hiệu hóa",
+        });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
