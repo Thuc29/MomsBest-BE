@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const ThreadFollow = require("../model/ThreadFollower");
 const ThreadLike = require("../model/ThreadLike");
 const ForumComment = require("../model/ForumComment");
-const { addUserPoints } = require("../helper/pointsHelper");
+const { addPointsForAction } = require("../helper/pointsHelper");
 
 // Create a new forum thread
 exports.createForumThread = async (req, res) => {
@@ -19,7 +19,7 @@ exports.createForumThread = async (req, res) => {
       is_pinned,
     });
     // Cộng điểm cho user khi tạo thread
-    await addUserPoints({
+    await addPointsForAction({
       userId: author_id,
       actionType: "post_thread",
       referenceId: newThread._id,
@@ -319,7 +319,7 @@ exports.createThread = async (req, res) => {
     const newThread = new ForumThread({ ...req.body, author_id: _id });
     await newThread.save();
     // Cộng điểm cho user khi tạo thread
-    await addUserPoints({
+    await addPointsForAction({
       userId: _id,
       actionType: "post_thread",
       referenceId: newThread._id,

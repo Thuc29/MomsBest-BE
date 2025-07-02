@@ -1,7 +1,7 @@
 const Category = require("../model/Category");
 const User = require("../model/User");
 const ForumThread = require("../model/ForumThread");
-const { addUserPoints } = require("../helper/pointsHelper");
+const { addPointsForAction } = require("../helper/pointsHelper");
 
 // Create a new category
 exports.createCategory = async (req, res) => {
@@ -19,7 +19,7 @@ exports.createCategory = async (req, res) => {
     await category.save();
     console.log("Category saved successfully:", category);
     // Cộng điểm cho user khi tạo category
-    await addUserPoints({
+    await addPointsForAction({
       userId: _id,
       actionType: "create_category",
       referenceId: category._id,

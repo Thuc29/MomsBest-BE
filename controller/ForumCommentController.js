@@ -1,7 +1,7 @@
 const ForumComment = require("../model/ForumComment");
 const CommentLike = require("../model/CommentLike");
 const mongoose = require("mongoose");
-const { addUserPoints } = require("../helper/pointsHelper");
+const { addPointsForAction } = require("../helper/pointsHelper");
 
 // Thêm comment hoặc reply
 exports.createComment = async (req, res) => {
@@ -33,7 +33,7 @@ exports.createComment = async (req, res) => {
     console.log("Comment saved successfully:", comment);
 
     // Cộng điểm cho user khi comment
-    await addUserPoints({
+    await addPointsForAction({
       userId: user._id,
       actionType: "comment",
       referenceId: comment._id,
