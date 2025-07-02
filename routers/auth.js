@@ -117,10 +117,27 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ success: false, message: "Lỗi server." });
   }
 });
+
 router.get("/me", authMiddleware, async (req, res) => {
   const user = await User.findById(req.user._id);
   if (!user) return res.status(404).json({ message: "User not found" });
   res.json({ user });
+});
+
+// Cập nhật thông tin cá nhân user
+router.put("/me", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const { name, avatar, email } = req.body;
+    if (name) user.name = name;
+    if (avatar) user.avatar = avatar;
+    if (email) user.email = email;
+    await user.save();
+    res.json({ success: true, user });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Lỗi server." });
+  }
 });
 
 module.exports = router;

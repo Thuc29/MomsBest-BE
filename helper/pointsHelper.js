@@ -2,7 +2,7 @@ const User = require("../model/User");
 const UserPointsHistory = require("../model/UserPointsHistory");
 const pointsConfig = require("../config/pointsConfig");
 
-async function addUserPoints({
+async function addPointsForAction({
   userId,
   actionType,
   referenceId,
@@ -26,4 +26,4 @@ async function addUserPoints({
   }
 }
 
-module.exports = { addUserPoints };
+module.exports = { addPointsForAction };

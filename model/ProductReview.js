@@ -1,5 +1,11 @@
 const mongoose = require("mongoose");
 
+const replySchema = new mongoose.Schema({
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  comment: String,
+  created_at: { type: Date, default: Date.now },
+});
+
 const productReviewSchema = new mongoose.Schema({
   product_id: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
@@ -11,6 +17,7 @@ const productReviewSchema = new mongoose.Schema({
   helpful_count: { type: Number, default: 0 },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
+  replies: [replySchema],
 });
 
 module.exports = mongoose.model("ProductReview", productReviewSchema);

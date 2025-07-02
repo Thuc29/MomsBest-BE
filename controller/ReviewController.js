@@ -1,7 +1,7 @@
 const ProductReview = require("../model/ProductReview");
 const User = require("../model/User");
 const UserPointsHistory = require("../model/UserPointsHistory");
-const { addUserPoints } = require("../helper/pointsHelper");
+const { addPointsForAction } = require("../helper/pointsHelper");
 const ReviewReaction = require("../model/ReviewReaction");
 const mongoose = require("mongoose");
 
@@ -18,7 +18,7 @@ exports.createReview = async (req, res) => {
       image: imagePath,
     });
     // Cộng điểm cho user khi review
-    await addUserPoints({
+    await addPointsForAction({
       userId: _id,
       actionType: "product_review",
       referenceId: newReview._id,
@@ -75,6 +75,18 @@ exports.likeReview = async (req, res) => {
       review_id: reviewId,
       user_id: userId,
     });
+    const review = await ProductReview.findById(reviewId);
+    if (!review) return res.status(404).json({ error: "Review not found" });
+    // Nếu user like review của người khác thì cộng điểm cho chủ review
+    if (review.user_id.toString() !== userId.toString()) {
+      await addPointsForAction({
+        userId: review.user_id,
+        actionType: "like_received",
+        referenceId: reviewId,
+        referenceType: "ProductReviewReaction",
+        description: `Nhận điểm khi review được bày tỏ cảm xúc (${reaction_type})`,
+      });
+    }
     if (reaction) {
       if (reaction.reaction_type === reaction_type) {
         // Nếu đã like kiểu này, bỏ like
@@ -156,6 +168,86 @@ exports.deleteReview = async (req, res) => {
         .json({ error: "Bạn không có quyền xóa đánh giá này" });
     await ReviewReaction.deleteMany({ review_id: reviewId });
     await review.deleteOne();
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.replyReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const { comment } = req.body;
+    const userId = req.user._id;
+    console.log(
+      "[replyReview] reviewId:",
+      reviewId,
+      "comment:",
+      comment,
+      "userId:",
+      userId
+    );
+    if (!comment)
+      return res.status(400).json({ error: "Thiếu nội dung trả lời" });
+    const review = await ProductReview.findById(reviewId);
+    console.log("[replyReview] review:", review);
+    if (!review) return res.status(404).json({ error: "Review not found" });
+    console.log("[replyReview] replies before:", review.replies.length);
+    review.replies.push({ user_id: userId, comment });
+    console.log("[replyReview] replies after push:", review.replies.length);
+    await review.save();
+    console.log("[replyReview] reply saved successfully");
+    const reply = review.replies[review.replies.length - 1];
+    // Cộng điểm cho user khi reply
+    await addPointsForAction({
+      userId,
+      actionType: "comment",
+      referenceId: reply._id,
+      referenceType: "ReviewReply",
+      description: "Nhận điểm khi trả lời đánh giá sản phẩm",
+    });
+    res.json(reply);
+  } catch (error) {
+    console.error("[replyReview] error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.updateReply = async (req, res) => {
+  try {
+    const { reviewId, replyId } = req.params;
+    const { comment } = req.body;
+    const userId = req.user._id;
+    const review = await ProductReview.findById(reviewId);
+    if (!review) return res.status(404).json({ error: "Review not found" });
+    const reply = review.replies.id(replyId);
+    if (!reply) return res.status(404).json({ error: "Reply not found" });
+    if (reply.user_id.toString() !== userId.toString())
+      return res
+        .status(403)
+        .json({ error: "Bạn không có quyền sửa reply này" });
+    reply.comment = comment;
+    await review.save();
+    res.json(reply);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.deleteReply = async (req, res) => {
+  try {
+    const { reviewId, replyId } = req.params;
+    const userId = req.user._id;
+    const review = await ProductReview.findById(reviewId);
+    if (!review) return res.status(404).json({ error: "Review not found" });
+    const reply = review.replies.id(replyId);
+    if (!reply) return res.status(404).json({ error: "Reply not found" });
+    if (reply.user_id.toString() !== userId.toString())
+      return res
+        .status(403)
+        .json({ error: "Bạn không có quyền xóa reply này" });
+    reply.remove();
+    await review.save();
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -15,6 +15,7 @@ const orderRouter = require("./routers/order");
 const chatbotRouter = require("./routers/chatbot");
 const adminRouter = require("./routers/admin");
 const adminUserController = require("./controller/admin/user");
+const favoriteRouter = require("./routers/favorite");
 
 // Connect Database
 connectDB();
@@ -40,7 +41,6 @@ app.use(morgan("dev"));
 
 // Cho phép truy cập ảnh review qua URL
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
 app.use("/api/auth", authRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/forumthreads", forumThreadRouter);
@@ -50,6 +50,7 @@ app.use("/api/productReviews", productReviewRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/chatbot", chatbotRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/favorite", favoriteRouter);
 
 const PORT = process.env.PORT || 9999;
 

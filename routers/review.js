@@ -28,5 +28,16 @@ router.put(
   ReviewController.updateReview
 );
 router.delete("/:reviewId", authMiddleware, ReviewController.deleteReview);
+router.post("/:reviewId/replies", authMiddleware, ReviewController.replyReview);
+router.put(
+  "/:reviewId/replies/:replyId",
+  authMiddleware,
+  ReviewController.updateReply
+);
+router.delete(
+  "/:reviewId/replies/:replyId",
+  authMiddleware,
+  ReviewController.deleteReply
+);
 
 module.exports = router;
