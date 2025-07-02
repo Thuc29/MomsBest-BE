@@ -17,6 +17,11 @@ module.exports = async function (req, res, next) {
     if (!user || user.role !== "admin") {
       return res.status(403).json({ message: "Forbidden: Admins only" });
     }
+    if (!user.is_active) {
+      return res
+        .status(403)
+        .json({ message: "Tài khoản của bạn đã bị vô hiệu hóa" });
+    }
     req.user = user;
     next();
   } catch (err) {
