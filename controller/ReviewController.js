@@ -8,7 +8,8 @@ const mongoose = require("mongoose");
 exports.createReview = async (req, res) => {
   try {
     const { _id } = req.user;
-    let imagePath = null;
+    // Ưu tiên lấy image từ FE (Cloudinary), nếu có upload file thì ghi đè
+    let imagePath = req.body.image || null;
     if (req.file) {
       imagePath = `/uploads/reviews/${req.file.filename}`;
     }
@@ -30,7 +31,6 @@ exports.createReview = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 exports.getListReviewByUser = async (req, res) => {
   try {
     const { _id } = req.user;
