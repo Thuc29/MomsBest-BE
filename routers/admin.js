@@ -6,7 +6,6 @@ const userController = require("../controller/admin/user");
 const productController = require("../controller/admin/product");
 const categoryController = require("../controller/admin/category");
 const orderController = require("../controller/admin/order");
-const articleController = require("../controller/admin/article");
 const forumThreadController = require("../controller/admin/forumThread");
 const forumCommentController = require("../controller/admin/forumComment");
 const categoryProductController = require("../controller/admin/categoryProduct");
@@ -56,18 +55,6 @@ router.get("/orders", isAdmin, orderController.getOrders);
 router.get("/orders/:id", isAdmin, orderController.getOrderById);
 router.patch("/orders/:id", isAdmin, orderController.updateOrderStatus);
 router.delete("/orders/:id", isAdmin, orderController.deleteOrder);
-
-// Quản lý bài viết
-router.get("/articles", isAdmin, articleController.getArticles);
-router.get("/articles/:id", isAdmin, articleController.getArticleById);
-router.post("/articles", isAdmin, articleController.createArticle);
-router.put("/articles/:id", isAdmin, articleController.updateArticle);
-router.delete("/articles/:id", isAdmin, articleController.deleteArticle);
-router.patch(
-  "/articles/:id/toggle-published",
-  isAdmin,
-  articleController.togglePublished
-);
 
 // Quản lý chủ đề forum
 router.get("/forumthreads", isAdmin, forumThreadController.getThreads);

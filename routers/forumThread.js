@@ -24,9 +24,14 @@ router.post("/:id/like", authMiddleware, ForumThreadController.likeThread);
 router.get("/:id/isliked", authMiddleware, ForumThreadController.isLiked);
 router.get("/:id/issaved", authMiddleware, ForumThreadController.isSaved);
 router.get("/:id/isfollowed", authMiddleware, ForumThreadController.isFollowed);
-
 router.get("/:id/isfollowed", authMiddleware, ForumThreadController.isFollowed);
+router.get(
+  "/getForumThreadByAuthor",
+  authMiddleware,
+  ForumThreadController.getForumThreadByAuthor
+);
 
-router.get("/getForumThreadByAuthor", authMiddleware, ForumThreadController.getForumThreadByAuthor);
+// Pin/unpin thread
+router.patch("/:id/pin", ForumThreadController.pinThread);
 
 module.exports = router;

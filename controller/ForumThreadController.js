@@ -331,3 +331,18 @@ exports.createThread = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+exports.pinThread = async (req, res) => {
+  try {
+    const { is_pinned } = req.body;
+    const thread = await ForumThread.findByIdAndUpdate(
+      req.params.id,
+      { is_pinned },
+      { new: true }
+    );
+    if (!thread) return res.status(404).json({ error: "Not found" });
+    res.json(thread);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

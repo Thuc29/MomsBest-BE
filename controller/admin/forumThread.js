@@ -21,6 +21,7 @@ exports.getThreads = async (req, res) => {
       query.thread_type = thread_type;
     }
     const threads = await ForumThread.find(query)
+      .populate("author_id", "name email")
       .skip((page - 1) * limit)
       .limit(Number(limit))
       .sort({ created_at: -1 });

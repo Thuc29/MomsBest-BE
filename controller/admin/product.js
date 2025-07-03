@@ -1,6 +1,5 @@
 const Product = require("../../model/Product");
 
-// Lấy danh sách sản phẩm (phân trang, tìm kiếm, lọc)
 exports.getProducts = async (req, res) => {
   try {
     const {
