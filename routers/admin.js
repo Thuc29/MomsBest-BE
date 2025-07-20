@@ -52,8 +52,16 @@ router.patch(
 
 // Quản lý đơn hàng
 router.get("/orders", isAdmin, orderController.getOrders);
+router.get("/orders/stats/overview", isAdmin, orderController.getOrderStats);
+router.get("/orders/recent/list", isAdmin, orderController.getRecentOrders);
+router.get("/orders/analyze/data", isAdmin, orderController.analyzeOrders);
 router.get("/orders/:id", isAdmin, orderController.getOrderById);
 router.patch("/orders/:id", isAdmin, orderController.updateOrderStatus);
+router.patch(
+  "/orders/:id/payment",
+  isAdmin,
+  orderController.updatePaymentStatus
+);
 router.delete("/orders/:id", isAdmin, orderController.deleteOrder);
 
 // Quản lý chủ đề forum
