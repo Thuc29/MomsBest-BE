@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
   original_price: { type: Number },
   category_ids: [
     { type: mongoose.Schema.Types.ObjectId, ref: "CategoryProduct" },
-  ],
+  ], // Đảm bảo ref là 'Category'
   brand: { type: String, maxlength: 255 },
   images: { type: [String] },
   stock_quantity: { type: Number, default: 0 },
